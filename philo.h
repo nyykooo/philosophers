@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/24 17:26:56 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:40:50 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,11 @@ typedef struct s_table
 } t_table;
 
 // GENERAL
-int	ft_atoi(const char *nptr);
+int		ft_atoi(const char *nptr);
+int		ft_strlen(char *str);
 long	ft_atol(const char *nbr);
 void	print_message(int	m_id, t_philo *philo);
+void	ft_exit(char *message, t_table *table);
 
 // PHILOS/THREADS
 void	create_philo(t_table *table);

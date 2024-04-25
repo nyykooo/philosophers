@@ -6,7 +6,7 @@
 #    By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 17:37:50 by ncampbel          #+#    #+#              #
-#    Updated: 2024/04/24 17:25:06 by ncampbel         ###   ########.fr        #
+#    Updated: 2024/04/25 15:03:59 by ncampbel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,9 @@ SRC = philo.c \
 		src/fork_functions.c \
 		src/philo_functions.c \
 		src/actions.c \
-		src/print.c
+		src/print.c \
+		src/ft_exit.c \
+		src/ft_strlen.c \
 		
 OBJ = $(SRC:.c=.o)
 
