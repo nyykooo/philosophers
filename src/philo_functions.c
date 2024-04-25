@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/25 15:50:16 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/25 21:32:51 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	*mind_hub(void *philosopher)
 	t_philo *philo;
 
 	philo = (t_philo *)philosopher;
-	if (!philo)
-		printf("philo created: %d\n", philo->table->n_philo);
 	pthread_mutex_lock(&philo->table->may_we);
 	printf("philo created: %d\n", philo->name);
 	pthread_mutex_unlock(&philo->table->may_we);
@@ -43,14 +41,14 @@ void	*mind_hub(void *philosopher)
 	return (NULL);
 }
 
-static void	init_philo(t_philo *philo, t_table **table, int name)
+static void	init_philo(t_philo *philo, t_table *table, int name)
 {
-	philo->t_die = (*table)->t_die;
-	philo->t_sleep = (*table)->t_sleep;
-	philo->t_eat = (*table)->t_eat;
-	philo->amount_eat = (*table)->amount_eat;
+	philo->t_die = table->t_die;
+	philo->t_sleep = table->t_sleep;
+	philo->t_eat = table->t_eat;
+	philo->amount_eat = table->amount_eat;
 	philo->name = name;
-	philo->table = *table;
+	philo->table = table;
 	philo->is_awake = true;
 	philo->t_last_meal = 0;
 }
@@ -63,9 +61,9 @@ void	create_philo(t_table *table)
 	i = 1;
 	while (i <= table->n_philo)
 	{
-		init_philo(&table->philo[i - 1], &table, i);
-		if (pthread_create(&table->philo[i].mind, NULL, mind_hub, 
-			&table->philo[i]) != 0)
+		init_philo(&table->philo[i - 1], table, i);
+		if (pthread_create(&table->philo[i - 1].mind, NULL, mind_hub, 
+			&table->philo[i] - 1) != 0)
 			ft_exit("", table);
 		usleep(100);
 		i++;
