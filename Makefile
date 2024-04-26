@@ -6,13 +6,13 @@
 #    By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 17:37:50 by ncampbel          #+#    #+#              #
-#    Updated: 2024/04/25 15:03:59 by ncampbel         ###   ########.fr        #
+#    Updated: 2024/04/26 17:43:32 by ncampbel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -o3
+CFLAGS = -Wall -Wextra -Werror -g -o3 -fsanitize=address
 SRC = philo.c \
 		src/ft_atoi.c \
 		src/ft_atol.c \
@@ -22,6 +22,7 @@ SRC = philo.c \
 		src/print.c \
 		src/ft_exit.c \
 		src/ft_strlen.c \
+		src/time.c \
 		
 OBJ = $(SRC:.c=.o)
 

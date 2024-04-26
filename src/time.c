@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 13:03:25 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/26 15:39:23 by ncampbel         ###   ########.fr       */
+/*   Created: 2024/04/26 15:07:27 by ncampbel          #+#    #+#             */
+/*   Updated: 2024/04/26 15:23:40 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	ft_exit(char *message, t_table *table)
+long	gettimeofday_ms(void)
 {
-	unsigned int	i;
+	struct timeval time;
 
-	i = 0;
-	if (table)
-	{
-		while (i < table->n_philo)
-			pthread_detach(table->philo[i++].mind);
-		if (table->philo)
-			free(table->philo);
-		if (table->fork)
-			free(table->fork);
-	}
-	if (message)
-	{
-		write(2, message, ft_strlen(message));
-		exit(EXIT_FAILURE);
-	}
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec)*1000 + (time.tv_usec)/1000);
+}
+
+void	better_msleep(long delay_ms)
+{
+	long	time_ms;
+	long	deadline;
+
+	time_ms = gettimeofday_ms();
+	deadline = time_ms + delay_ms;
+	while (gettimeofday_ms() < deadline)
+		usleep(1);
 }

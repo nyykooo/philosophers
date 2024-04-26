@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/25 15:40:50 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/26 17:04:41 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ typedef struct s_table
 	unsigned long	t_eat;
 	unsigned long	t_sleep;
 	unsigned int	n_philo;
+	bool			all_alive;
+	long			start;
 	int				amount_eat;
 	pthread_mutex_t	may_we;
 	pthread_mutex_t	print_message;
-	struct timeval	start;
 	t_philo			*philo;
 	t_fork			*fork;
 } t_table;
@@ -70,12 +71,15 @@ void	*mind_hub(void *philosopher);
 
 // FORKS/MUTEXES
 void	create_fork(t_table *table);
-bool	check_forks(t_fork *left, t_fork *right);
+bool	check_forks(t_philo *philo, t_fork *left, t_fork *right);
 
 // ACTIONS
 void	eating(t_philo *philo);
 void	sleeping(t_philo *philo);
 void	thinking(t_philo *philo);
 
+// TIME
+void	better_msleep(long delay_ms);
+long	gettimeofday_ms(void);
 
 #endif

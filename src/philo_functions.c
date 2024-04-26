@@ -6,28 +6,29 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/25 21:32:51 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/26 17:50:58 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-// static void	habits(t_philo *philo)
-// {
-// 	if (philo->name % 2 == 0)
-// 		usleep(200);
-// 	while (1)
-// 	{
-// 		if (check_forks(&philo->l_fork, &philo->r_fork) == true
-// 			&& philo->amount_eat != 0)
-// 		{
-// 			eating(philo);
-// 			sleeping(philo);
-// 		}
-// 		else if (!philo->is_awake)
-// 			thinking(philo);
-// 	}
-// }
+static void	habits(t_philo *philo)
+{
+	if (philo->name % 2 == 0)
+		better_msleep(philo->t_eat);
+	while (1)
+	{
+		if ((philo->amount_eat == -1 ||
+			 philo->amount_eat > 0)
+			&& (check_forks(philo, &philo->l_fork, &philo->r_fork) == true))
+		{
+			eating(philo);
+			sleeping(philo);
+		}
+		else if (!philo->is_awake)
+			thinking(philo);
+	}
+}
 
 void	*mind_hub(void *philosopher)
 {
@@ -35,9 +36,8 @@ void	*mind_hub(void *philosopher)
 
 	philo = (t_philo *)philosopher;
 	pthread_mutex_lock(&philo->table->may_we);
-	printf("philo created: %d\n", philo->name);
 	pthread_mutex_unlock(&philo->table->may_we);
-	// habits(philo);
+	habits(philo);
 	return (NULL);
 }
 
@@ -50,22 +50,26 @@ static void	init_philo(t_philo *philo, t_table *table, int name)
 	philo->name = name;
 	philo->table = table;
 	philo->is_awake = true;
-	philo->t_last_meal = 0;
+	philo->t_last_meal = table->start;
+	philo->l_fork = table->fork[philo->name - 1];
+	if ((unsigned int)philo->name == table->n_philo)
+		philo->r_fork = table->fork[0];
+	else
+		philo->r_fork = table->fork[philo->name - 1];
 }
 
 void	create_philo(t_table *table)
 {
 	unsigned int	i;
 
+	i = 0;
 	pthread_mutex_lock(&table->may_we);
-	i = 1;
-	while (i <= table->n_philo)
+	while (i < table->n_philo)
 	{
-		init_philo(&table->philo[i - 1], table, i);
-		if (pthread_create(&table->philo[i - 1].mind, NULL, mind_hub, 
-			&table->philo[i] - 1) != 0)
+		init_philo(&table->philo[i], table, i + 1);
+		if (pthread_create(&table->philo[i].mind, NULL, mind_hub, 
+			&table->philo[i]) != 0)
 			ft_exit("", table);
-		usleep(100);
 		i++;
 	}
 	pthread_mutex_unlock(&table->may_we);
