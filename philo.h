@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/26 17:04:41 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/27 11:48:41 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_table
 	int				amount_eat;
 	pthread_mutex_t	may_we;
 	pthread_mutex_t	print_message;
+	pthread_mutex_t	checking_forks;
 	t_philo			*philo;
 	t_fork			*fork;
 } t_table;
@@ -62,7 +63,7 @@ typedef struct s_table
 int		ft_atoi(const char *nptr);
 int		ft_strlen(char *str);
 long	ft_atol(const char *nbr);
-void	print_message(int	m_id, t_philo *philo);
+void	print_message(int	m_id, t_philo *philo, int id);
 void	ft_exit(char *message, t_table *table);
 
 // PHILOS/THREADS

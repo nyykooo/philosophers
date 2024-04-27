@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/26 17:50:58 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/27 12:16:23 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	habits(t_philo *philo)
 {
-	if (philo->name % 2 == 0)
+	if (philo->name % 2 == 0 || (unsigned int)philo->name == philo->table->n_philo)
 		better_msleep(philo->t_eat);
-	while (1)
+	while (philo->table->all_alive == true)
 	{
 		if ((philo->amount_eat == -1 ||
 			 philo->amount_eat > 0)
@@ -25,7 +25,7 @@ static void	habits(t_philo *philo)
 			eating(philo);
 			sleeping(philo);
 		}
-		else if (!philo->is_awake)
+		if (philo->is_awake == false)
 			thinking(philo);
 	}
 }
@@ -43,6 +43,7 @@ void	*mind_hub(void *philosopher)
 
 static void	init_philo(t_philo *philo, t_table *table, int name)
 {
+	// olhar possivel confusao na atribuição dos garfos aos filosofos, pode ser que alguns garfos estejam com id certo porem correspondam à posicao errada no array table->forks
 	philo->t_die = table->t_die;
 	philo->t_sleep = table->t_sleep;
 	philo->t_eat = table->t_eat;
@@ -55,7 +56,7 @@ static void	init_philo(t_philo *philo, t_table *table, int name)
 	if ((unsigned int)philo->name == table->n_philo)
 		philo->r_fork = table->fork[0];
 	else
-		philo->r_fork = table->fork[philo->name - 1];
+		philo->r_fork = table->fork[philo->name];
 }
 
 void	create_philo(t_table *table)

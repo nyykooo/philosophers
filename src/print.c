@@ -6,14 +6,14 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:22:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/26 17:10:28 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/27 11:48:00 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
 
-void	print_message(int	m_id, t_philo *philo)
+void	print_message(int	m_id, t_philo *philo,	int id)
 {
 	pthread_mutex_lock(&philo->table->print_message);
 	if (philo->table->all_alive == true)
@@ -25,7 +25,7 @@ void	print_message(int	m_id, t_philo *philo)
 		else if (m_id == 3)
 			printf("%ld %d is thinking\n", gettimeofday_ms() - 	philo->table->start, philo->name);
 		else if (m_id == 4)
-			printf("%ld %d has taken a fork\n", gettimeofday_ms() - 	philo->table->start, philo->name);
+			printf("%ld %d has taken a fork: %d\n", gettimeofday_ms() - 	philo->table->start, philo->name, id);
 		else if (m_id == 5)
 		{
 			printf("%ld %d died\n", gettimeofday_ms() - 	philo->table->start, philo->name);
