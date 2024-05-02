@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/27 11:48:41 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/29 22:55:31 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdbool.h>
 # include <stdlib.h>
 # include <math.h>
+# include <string.h>
 
 typedef struct s_fork
 {
@@ -33,12 +34,13 @@ typedef struct s_philo
 	unsigned long	t_die;
 	unsigned long	t_eat;
 	unsigned long	t_sleep;
+	unsigned long	t_think;
 	unsigned long	t_last_meal;
 	int				amount_eat;
 	int				name;
 	bool			is_awake;
-	t_fork			l_fork;
-	t_fork			r_fork;
+	t_fork			*l_fork;
+	t_fork			*r_fork;
 	pthread_t		mind;
 	struct s_table	*table;
 } t_philo;
@@ -54,7 +56,6 @@ typedef struct s_table
 	int				amount_eat;
 	pthread_mutex_t	may_we;
 	pthread_mutex_t	print_message;
-	pthread_mutex_t	checking_forks;
 	t_philo			*philo;
 	t_fork			*fork;
 } t_table;
@@ -63,7 +64,7 @@ typedef struct s_table
 int		ft_atoi(const char *nptr);
 int		ft_strlen(char *str);
 long	ft_atol(const char *nbr);
-void	print_message(int	m_id, t_philo *philo, int id);
+void	print_message(int	m_id, t_philo *philo);
 void	ft_exit(char *message, t_table *table);
 
 // PHILOS/THREADS

@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 13:03:25 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/26 15:39:23 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/01 13:59:04 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,8 @@
 
 void	ft_exit(char *message, t_table *table)
 {
-	unsigned int	i;
-
-	i = 0;
 	if (table)
 	{
-		while (i < table->n_philo)
-			pthread_detach(table->philo[i++].mind);
 		if (table->philo)
 			free(table->philo);
 		if (table->fork)
@@ -31,4 +26,5 @@ void	ft_exit(char *message, t_table *table)
 		write(2, message, ft_strlen(message));
 		exit(EXIT_FAILURE);
 	}
+	exit(EXIT_SUCCESS);
 }

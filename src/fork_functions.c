@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:18:13 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/27 11:48:21 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/04/29 22:58:07 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,15 @@ bool	check_forks(t_philo *philo, t_fork *left, t_fork *right)
 {
 	bool result;
 	
-	result = false;
-	pthread_mutex_lock(&philo->table->checking_forks);
 	if (left->taken == false && right->taken == false)
 	{
 		pthread_mutex_lock(&left->fork);
 		left->taken = true;
-		print_message(4, philo, left->id);
+		print_message(4, philo);
 		pthread_mutex_lock(&right->fork);
 		right->taken = true;
-		print_message(4, philo, right->id);
+		print_message(4, philo);
 		result = true;
 	}
-	pthread_mutex_unlock(&philo->table->checking_forks);
 	return (result);
 }
