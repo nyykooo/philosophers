@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/01 13:54:53 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:08:18 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,25 @@ static void	wait_threads(t_table *table)
 static void	check_4deaths(t_table *table)
 {
 	unsigned int	i;
+	unsigned int	n;
 
 	while (table->all_alive == true)
 	{
 		i = 0;
+		n = 0;
 		while (i < table->n_philo)
 		{
-			if((table->amount_eat == -1 || table->philo[i].amount_eat > 0)
-				&& (gettimeofday_ms() - table->philo[i].t_last_meal > table->t_die))
+			if (table->philo[i].amount_eat == 0)
+				n++;
+			if (n == table->n_philo)
+				wait_threads(table);
+			if((table->philo[i].amount_eat == -1 || table->philo[i].amount_eat
+				> 0) && (gettimeofday_ms() - table->philo[i].t_last_meal > table->t_die))
 			{
-				print_message(5, &table->philo[i]);
+				pthread_mutex_lock(&table->print_message);
+				printf("%ld %d died\n", gettimeofday_ms() - table->start, table->philo[i].name);
+				table->all_alive = false;
+				pthread_mutex_unlock(&table->print_message);
 				wait_threads(table);
 			}
 			i++;

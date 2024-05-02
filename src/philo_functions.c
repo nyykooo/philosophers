@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/29 22:57:40 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:08:59 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,39 @@ static void	habits(t_philo *philo)
 {
 	if (philo->table->n_philo % 2 == 1)
 	{
-		if (philo->name % 2 == 1)
+		if ((unsigned int)philo->name == philo->table->n_philo)
+			better_msleep(philo->t_eat * 2);
+		else if (philo->name % 2 == 1)
 			better_msleep(philo->t_eat);
 	}
-	else
+	else if (philo->name % 2 == 0)
 		better_msleep(philo->t_eat);
-	while (philo->table->all_alive == true)
+	while (philo->alive == true && (philo->amount_eat == -1
+			|| philo->amount_eat > 0))
 	{
-		if ((philo->amount_eat == -1 ||
-			 philo->amount_eat > 0)
-			&& (check_forks(philo, philo->l_fork, philo->r_fork) == true))
-		{
-			eating(philo);
-			sleeping(philo);
-		}
-		else if (philo->is_awake == false)
-			thinking(philo);
+		check_forks(philo, philo->l_fork, philo->r_fork);
+		eating(philo);
+		if (!philo->stop)
+			return ();
+		sleeping(philo);
+		if (sair)
+			return ();
+		thinking(philo);
+		if (sair)
+			return ();
 	}
+	// FAZAER MUTEX TANTO PARA O PHILO QUANTO PARA AS VARIAVEIS QUE VOU VERIFICAR EM MAIS DE UMA THREAD
+	// {
+	// 	if ((philo->amount_eat == -1 ||
+	// 		 philo->amount_eat > 0)
+	// 		&& (check_forks(philo, philo->l_fork, philo->r_fork) == true))
+	// 	{
+	// 		check_forks(philo, philo->l_fork, philo->r_fork)
+	// 		eating(philo);
+	// 		sleeping(philo);
+	// 		thinking(philo);
+	// 	}
+	// }
 }
 
 void	*mind_hub(void *philosopher)
@@ -59,7 +75,6 @@ void	*mind_hub(void *philosopher)
 
 static void	init_philo(t_philo *philo, t_table *table, int name)
 {
-	// olhar possivel confusao na atribuição dos garfos aos filosofos, pode ser que alguns garfos estejam com id certo porem correspondam à posicao errada no array table->forks
 	philo->t_die = table->t_die;
 	philo->t_sleep = table->t_sleep;
 	philo->t_eat = table->t_eat;

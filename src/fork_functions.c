@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:18:13 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/29 22:58:07 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:14:34 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,11 @@ void	create_fork(t_table *table)
 
 bool	check_forks(t_philo *philo, t_fork *left, t_fork *right)
 {
-	bool result;
-	
-	if (left->taken == false && right->taken == false)
-	{
-		pthread_mutex_lock(&left->fork);
-		left->taken = true;
-		print_message(4, philo);
-		pthread_mutex_lock(&right->fork);
-		right->taken = true;
-		print_message(4, philo);
-		result = true;
-	}
-	return (result);
+	pthread_mutex_lock(&left->fork);
+	left->taken = true;
+	print_message("has taken a fork", philo, gettimeofday_ms());
+	pthread_mutex_lock(&right->fork);
+	right->taken = true;
+	print_message("has taken a fork", philo, gettimeofday_ms());
+	return (true);
 }
