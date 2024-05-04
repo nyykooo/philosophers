@@ -6,14 +6,14 @@
 #    By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 17:37:50 by ncampbel          #+#    #+#              #
-#    Updated: 2024/05/01 13:52:05 by ncampbel         ###   ########.fr        #
+#    Updated: 2024/05/04 14:20:25 by ncampbel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -o3 -fsanitize=address
-SRC = philo.c \
+SRC = table.c \
 		src/ft_atoi.c \
 		src/ft_atol.c \
 		src/fork_functions.c \

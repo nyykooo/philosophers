@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/02 16:08:59 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/04 16:55:48 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +34,21 @@ static void	habits(t_philo *philo)
 	}
 	else if (philo->name % 2 == 0)
 		better_msleep(philo->t_eat);
-	while (philo->alive == true && (philo->amount_eat == -1
-			|| philo->amount_eat > 0))
+	while (philo->amount_eat == -1 || philo->amount_eat > 0)
 	{
 		check_forks(philo, philo->l_fork, philo->r_fork);
 		eating(philo);
-		if (!philo->stop)
-			return ();
+		if (philo->stop == true)
+			return ;
 		sleeping(philo);
-		if (sair)
-			return ();
+		if (philo->stop == true)
+			return ;
 		thinking(philo);
-		if (sair)
-			return ();
+		if (philo->stop == true)
+			return ;
 	}
+	return ;
 	// FAZAER MUTEX TANTO PARA O PHILO QUANTO PARA AS VARIAVEIS QUE VOU VERIFICAR EM MAIS DE UMA THREAD
-	// {
-	// 	if ((philo->amount_eat == -1 ||
-	// 		 philo->amount_eat > 0)
-	// 		&& (check_forks(philo, philo->l_fork, philo->r_fork) == true))
-	// 	{
-	// 		check_forks(philo, philo->l_fork, philo->r_fork)
-	// 		eating(philo);
-	// 		sleeping(philo);
-	// 		thinking(philo);
-	// 	}
-	// }
 }
 
 void	*mind_hub(void *philosopher)
@@ -73,7 +62,7 @@ void	*mind_hub(void *philosopher)
 	return (NULL);
 }
 
-static void	init_philo(t_philo *philo, t_table *table, int name)
+static bool	init_philo(t_philo *philo, t_table *table, int name)
 {
 	philo->t_die = table->t_die;
 	philo->t_sleep = table->t_sleep;
@@ -83,12 +72,16 @@ static void	init_philo(t_philo *philo, t_table *table, int name)
 	philo->name = name + 1;
 	philo->table = table;
 	philo->is_awake = true;
+	philo->stop = false;
 	philo->t_last_meal = table->start;
 	philo->l_fork = &table->fork[name];
 	if ((unsigned int)philo->name == table->n_philo)
 		philo->r_fork = &table->fork[0];
 	else
 		philo->r_fork = &table->fork[name + 1];
+	if (pthread_mutex_init(&philo->body, NULL) != 0)
+		return (false);
+	return (true);
 }
 
 void	create_philo(t_table *table)
@@ -99,10 +92,19 @@ void	create_philo(t_table *table)
 	pthread_mutex_lock(&table->may_we);
 	while (i < table->n_philo)
 	{
-		init_philo(&table->philo[i], table, i);
+		if (init_philo(&table->philo[i], table, i) == false)
+		{
+			ft_exit("mutex (philo->body) error\n", table);
+			pthread_mutex_unlock(&table->may_we);
+			return ;
+		}
 		if (pthread_create(&table->philo[i].mind, NULL, mind_hub, 
 			&table->philo[i]) != 0)
-			ft_exit("", table);
+		{
+			pthread_mutex_unlock(&table->may_we);
+			ft_exit("thread error\n", table);
+			return ;
+		}
 		i++;
 	}
 	pthread_mutex_unlock(&table->may_we);

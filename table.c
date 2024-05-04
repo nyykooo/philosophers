@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   table.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/02 16:08:18 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/04 16:53:58 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ static void	wait_threads(t_table *table)
 	i = 0;
 	while (i < table->n_philo)
 		pthread_join(table->philo[i++].mind, NULL);
-	ft_exit(NULL, table);
-	
 }
 
 static void	check_4deaths(t_table *table)
@@ -35,6 +33,7 @@ static void	check_4deaths(t_table *table)
 		n = 0;
 		while (i < table->n_philo)
 		{
+			pthread_mutex_lock(&table->philo[i].body);
 			if (table->philo[i].amount_eat == 0)
 				n++;
 			if (n == table->n_philo)
@@ -42,12 +41,11 @@ static void	check_4deaths(t_table *table)
 			if((table->philo[i].amount_eat == -1 || table->philo[i].amount_eat
 				> 0) && (gettimeofday_ms() - table->philo[i].t_last_meal > table->t_die))
 			{
-				pthread_mutex_lock(&table->print_message);
-				printf("%ld %d died\n", gettimeofday_ms() - table->start, table->philo[i].name);
-				table->all_alive = false;
-				pthread_mutex_unlock(&table->print_message);
+				death(table, i);
 				wait_threads(table);
+				return ;
 			}
+			pthread_mutex_unlock(&table->philo[i].body);
 			i++;
 		}
 	}
@@ -64,18 +62,22 @@ static void	init_table(t_table *table, char **av)
 	table->start = gettimeofday_ms();
 	if (av[5])
 		table->amount_eat = ft_atoi(av[5]);
-	if (pthread_mutex_init(&table->may_we, NULL) != 0)
-		ft_exit("mutex 'may_we' error\n", table);
-	if (pthread_mutex_init(&table->print_message, NULL) != 0)
-		ft_exit("mutex 'print_message' error\n", table);
+	if (pthread_mutex_init(&table->may_we, NULL) != 0
+		|| pthread_mutex_init(&table->print_message, NULL) != 0)
+	{
+		ft_exit("mutex error\n", table);
+		return ;
+	}
 	table->philo = (t_philo *)malloc(sizeof(t_philo)*table->n_philo);
 	if (!table->philo)
 		ft_exit("malloc philo\n", table);
 	table->fork = (t_fork *)malloc(sizeof(t_fork)*table->n_philo);
 	if (!table->fork)
 		ft_exit("malloc fork\n", table);
-	create_fork(table);
-	create_philo(table);
+	if (table)
+		create_fork(table);
+	if (table)
+		create_philo(table);
 }
 
 static void	parse_input(int ac)
@@ -91,6 +93,8 @@ int	main(int ac, char **av)
 	
 	parse_input(ac);
 	init_table(&table, av);
-	check_4deaths(&table);
+	if (&table)
+		check_4deaths(&table);
+	ft_exit(NULL, &table);
 	return (0);
 }
