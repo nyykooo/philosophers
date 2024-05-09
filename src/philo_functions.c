@@ -6,15 +6,15 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 13:33:26 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 14:44:31 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-static unsigned long get_t_think(t_table *table)
+static unsigned long	get_t_think(t_table *table)
 {
-	unsigned long t_think;
+	unsigned long	t_think;
 
 	if (table->n_philo % 2 == 1)
 		t_think = table->t_eat * 2 - table->t_sleep;
@@ -52,7 +52,7 @@ static void	habits(t_philo *philo)
 
 void	*mind_hub(void *philosopher)
 {
-	t_philo *philo;
+	t_philo		*philo;
 
 	philo = (t_philo *)philosopher;
 	pthread_mutex_lock(&philo->table->may_we);
@@ -78,15 +78,11 @@ static bool	init_philo(t_philo *philo, t_table *table, int name)
 		philo->r_fork = &table->fork[0];
 	else
 		philo->r_fork = &table->fork[name + 1];
-	if (pthread_mutex_init(&philo->body, NULL) != 0){
-		printf("Error: mutex init failed\n");
-		return (false);}
-	if (pthread_create(&philo->mind, NULL, mind_hub, 
-		philo) != 0)
-	{
-		printf("Error: thread creation failed\n");
+	if (pthread_mutex_init(&philo->body, NULL) != 0)
 		return (false);
-	}
+	if (pthread_create(&philo->mind, NULL, mind_hub, 
+			philo) != 0)
+		return (false);
 	return (true);
 }
 
@@ -105,7 +101,6 @@ void	create_philo(t_table *table)
 			return ;
 		}
 		i++;
-	printf("%d\n", i);
 	}
 	pthread_mutex_unlock(&table->may_we);
 }

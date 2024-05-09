@@ -6,12 +6,11 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 13:23:21 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 14:42:12 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 static void	wait_threads(t_table *table)
 {
@@ -26,7 +25,7 @@ static void	check_4deaths(t_table *table)
 {
 	unsigned int	i;
 	unsigned int	n;
-	
+
 	while (table->all_alive == true && table->all_eaten == false)
 	{
 		i = 0;
@@ -38,8 +37,9 @@ static void	check_4deaths(t_table *table)
 				n++;
 			if (n == table->n_philo)
 				table->all_eaten = true;
-			if((table->philo[i].amount_eat == -1 || table->philo[i].amount_eat
-				> 0) && (gettimeofday_ms() - table->philo[i].t_last_meal > table->t_die))
+			if ((table->philo[i].amount_eat == -1 || table->philo[i].amount_eat
+					> 0) && (gettimeofday_ms() - table->philo[i].t_last_meal
+					> table->t_die))
 			{
 				death_eaten(table, i);
 				return ;
@@ -68,10 +68,10 @@ static void	init_table(t_table *table, char **av)
 		ft_exit(table);
 		return ;
 	}
-	table->philo = (t_philo *)malloc(sizeof(t_philo)*table->n_philo);
+	table->philo = (t_philo *)malloc(sizeof(t_philo) * table->n_philo);
 	if (!table->philo)
 		ft_exit(table);
-	table->fork = (t_fork *)malloc(sizeof(t_fork)*table->n_philo);
+	table->fork = (t_fork *)malloc(sizeof(t_fork) * table->n_philo);
 	if (!table->fork)
 		ft_exit(table);
 }
@@ -79,11 +79,13 @@ static void	init_table(t_table *table, char **av)
 static bool	parse_input(int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		return (false);	
-	else if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0
+		return (false);
+	if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0
 		|| ft_atoi(av[4]) < 0)
 		return (false);
 	else if (ac == 6 && (ft_atoi(av[5]) < 0 || ft_atoi(av[5]) == 0))
+		return (false);
+	if (ft_atol(av[1]) > 200)
 		return (false);
 	return (true);
 }
@@ -91,7 +93,7 @@ static bool	parse_input(int ac, char **av)
 int	main(int ac, char **av)
 {
 	static t_table	table;
-	
+
 	if (parse_input(ac, av) == true)
 	{
 		init_table(&table, av);

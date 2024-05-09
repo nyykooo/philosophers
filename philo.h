@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 11:12:59 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 14:40:24 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@
 # include <stdlib.h>
 # include <math.h>
 # include <string.h>
+# include <limits.h>
 
 typedef struct s_fork
 {
 	int				id;
 	pthread_mutex_t	fork;
-} t_fork;
+}	t_fork;
 
 typedef struct s_philo
 {
@@ -44,7 +45,7 @@ typedef struct s_philo
 	pthread_t		mind;
 	pthread_mutex_t	body;
 	struct s_table	*table;
-} t_philo;
+}	t_philo;
 
 typedef struct s_table
 {
@@ -60,7 +61,7 @@ typedef struct s_table
 	pthread_mutex_t	print_message;
 	t_philo			*philo;
 	t_fork			*fork;
-} t_table;
+}	t_table;
 
 // GENERAL
 int		ft_atoi(const char *nptr);
