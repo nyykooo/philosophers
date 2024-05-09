@@ -6,15 +6,15 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 14:36:33 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 11:12:59 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <stdio.h>
 # include <unistd.h>
+# include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdbool.h>
@@ -24,7 +24,6 @@
 
 typedef struct s_fork
 {
-	bool			taken;
 	int				id;
 	pthread_mutex_t	fork;
 } t_fork;
@@ -36,7 +35,7 @@ typedef struct s_philo
 	unsigned long	t_sleep;
 	unsigned long	t_think;
 	unsigned long	t_last_meal;
-	int				amount_eat;
+	long			amount_eat;
 	int				name;
 	bool			is_awake;
 	bool			stop;
@@ -54,6 +53,7 @@ typedef struct s_table
 	unsigned long	t_sleep;
 	unsigned int	n_philo;
 	bool			all_alive;
+	bool			all_eaten;
 	long			start;
 	int				amount_eat;
 	pthread_mutex_t	may_we;
@@ -66,11 +66,11 @@ typedef struct s_table
 int		ft_atoi(const char *nptr);
 int		ft_strlen(char *str);
 long	ft_atol(const char *nbr);
-void	ft_exit(char *message, t_table *table);
+void	ft_exit(t_table *table);
 
 // PRINTING
 void	print_message(char *message, t_philo *philo, unsigned long time);
-void	death(t_table *table, int name);
+void	death_eaten(t_table *table, int name);
 
 // PHILOS/THREADS
 void	create_philo(t_table *table);

@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 16:53:58 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 13:23:21 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static void	check_4deaths(t_table *table)
 {
 	unsigned int	i;
 	unsigned int	n;
-
-	while (table->all_alive == true)
+	
+	while (table->all_alive == true && table->all_eaten == false)
 	{
 		i = 0;
 		n = 0;
@@ -37,12 +37,11 @@ static void	check_4deaths(t_table *table)
 			if (table->philo[i].amount_eat == 0)
 				n++;
 			if (n == table->n_philo)
-				wait_threads(table);
+				table->all_eaten = true;
 			if((table->philo[i].amount_eat == -1 || table->philo[i].amount_eat
 				> 0) && (gettimeofday_ms() - table->philo[i].t_last_meal > table->t_die))
 			{
-				death(table, i);
-				wait_threads(table);
+				death_eaten(table, i);
 				return ;
 			}
 			pthread_mutex_unlock(&table->philo[i].body);
@@ -59,42 +58,52 @@ static void	init_table(t_table *table, char **av)
 	table->t_sleep = ft_atoi(av[4]);
 	table->amount_eat = -1;
 	table->all_alive = true;
+	table->all_eaten = false;
 	table->start = gettimeofday_ms();
 	if (av[5])
-		table->amount_eat = ft_atoi(av[5]);
+		table->amount_eat = ft_atol(av[5]);
 	if (pthread_mutex_init(&table->may_we, NULL) != 0
 		|| pthread_mutex_init(&table->print_message, NULL) != 0)
 	{
-		ft_exit("mutex error\n", table);
+		ft_exit(table);
 		return ;
 	}
 	table->philo = (t_philo *)malloc(sizeof(t_philo)*table->n_philo);
 	if (!table->philo)
-		ft_exit("malloc philo\n", table);
+		ft_exit(table);
 	table->fork = (t_fork *)malloc(sizeof(t_fork)*table->n_philo);
 	if (!table->fork)
-		ft_exit("malloc fork\n", table);
-	if (table)
-		create_fork(table);
-	if (table)
-		create_philo(table);
+		ft_exit(table);
 }
 
-static void	parse_input(int ac)
+static bool	parse_input(int ac, char **av)
 {
-	if (ac < 5)
-		ft_exit("invalid input\n", NULL);
-	return ;
+	if (ac < 5 || ac > 6)
+		return (false);	
+	else if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0
+		|| ft_atoi(av[4]) < 0)
+		return (false);
+	else if (ac == 6 && (ft_atoi(av[5]) < 0 || ft_atoi(av[5]) == 0))
+		return (false);
+	return (true);
 }
 
 int	main(int ac, char **av)
 {
 	static t_table	table;
 	
-	parse_input(ac);
-	init_table(&table, av);
-	if (&table)
-		check_4deaths(&table);
-	ft_exit(NULL, &table);
+	if (parse_input(ac, av) == true)
+	{
+		init_table(&table, av);
+		if (table.fork)
+			create_fork(&table);
+		if (table.philo && table.fork)
+			create_philo(&table);
+		if (table.philo)
+			check_4deaths(&table);
+		if (table.philo)
+			wait_threads(&table);
+	}
+	ft_exit(&table);
 	return (0);
 }

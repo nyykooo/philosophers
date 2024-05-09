@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:22:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 16:15:45 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 12:24:26 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	print_message(char *message, t_philo *philo, unsigned long time)
 	pthread_mutex_unlock(&philo->table->print_message);
 }
 
-void	death(t_table *table, int name)
+void	death_eaten(t_table *table, int name)
 {
 	unsigned int	i;
 
@@ -34,4 +34,5 @@ void	death(t_table *table, int name)
 	while (i < table->n_philo)
 		table->philo[i++].stop = true;
 	pthread_mutex_unlock(&table->print_message);
+	pthread_mutex_unlock(&table->philo[name].body);
 }

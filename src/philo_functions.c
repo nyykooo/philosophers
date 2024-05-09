@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 16:55:48 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 13:33:26 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	habits(t_philo *philo)
 			return ;
 	}
 	return ;
-	// FAZAER MUTEX TANTO PARA O PHILO QUANTO PARA AS VARIAVEIS QUE VOU VERIFICAR EM MAIS DE UMA THREAD
 }
 
 void	*mind_hub(void *philosopher)
@@ -79,8 +78,15 @@ static bool	init_philo(t_philo *philo, t_table *table, int name)
 		philo->r_fork = &table->fork[0];
 	else
 		philo->r_fork = &table->fork[name + 1];
-	if (pthread_mutex_init(&philo->body, NULL) != 0)
+	if (pthread_mutex_init(&philo->body, NULL) != 0){
+		printf("Error: mutex init failed\n");
+		return (false);}
+	if (pthread_create(&philo->mind, NULL, mind_hub, 
+		philo) != 0)
+	{
+		printf("Error: thread creation failed\n");
 		return (false);
+	}
 	return (true);
 }
 
@@ -94,18 +100,12 @@ void	create_philo(t_table *table)
 	{
 		if (init_philo(&table->philo[i], table, i) == false)
 		{
-			ft_exit("mutex (philo->body) error\n", table);
+			ft_exit(table);
 			pthread_mutex_unlock(&table->may_we);
-			return ;
-		}
-		if (pthread_create(&table->philo[i].mind, NULL, mind_hub, 
-			&table->philo[i]) != 0)
-		{
-			pthread_mutex_unlock(&table->may_we);
-			ft_exit("thread error\n", table);
 			return ;
 		}
 		i++;
+	printf("%d\n", i);
 	}
 	pthread_mutex_unlock(&table->may_we);
 }

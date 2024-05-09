@@ -6,13 +6,13 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 13:03:25 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 16:16:39 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:51:53 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	ft_exit(char *message, t_table *table)
+void	ft_exit(t_table *table)
 {
 	if (table)
 	{
@@ -20,10 +20,5 @@ void	ft_exit(char *message, t_table *table)
 			free(table->philo);
 		if (table->fork)
 			free(table->fork);
-	}
-	if (message)
-	{
-		write(2, message, ft_strlen(message));
-		exit(EXIT_FAILURE);
 	}
 }

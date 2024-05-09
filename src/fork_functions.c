@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:18:13 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/04 16:55:30 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:34:36 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static bool	init_fork(t_fork *fork, t_table *table, int i)
 {
-	fork->taken = false;
 	fork->id = i + 1;
 	if (pthread_mutex_init(&table->fork[i].fork, NULL) != 0)
 		return (false);
+	return (true);
 }
 
 void	create_fork(t_table *table)
@@ -29,7 +29,7 @@ void	create_fork(t_table *table)
 	{
 		if (init_fork(&table->fork[i], table, i) == false)
 		{
-			ft_exit("mutex (fork) error\n", table);
+			ft_exit(table);
 			return ;
 		}
 		i++;
@@ -38,10 +38,14 @@ void	create_fork(t_table *table)
 
 void	check_forks(t_philo *philo, t_fork *left, t_fork *right)
 {
-	pthread_mutex_lock(&left->fork);
-	left->taken = true;
+	if (philo->name % 2 == 1)
+		pthread_mutex_lock(&left->fork);
+	else
+		pthread_mutex_lock(&right->fork);
 	print_message("has taken a fork", philo, gettimeofday_ms());
-	pthread_mutex_lock(&right->fork);
-	right->taken = true;
+	if (philo->name % 2 == 1)
+		pthread_mutex_lock(&right->fork);
+	else
+		pthread_mutex_lock(&left->fork);
 	print_message("has taken a fork", philo, gettimeofday_ms());
 }
