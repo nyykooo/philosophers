@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 14:44:31 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:40:21 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	habits(t_philo *philo)
 		better_msleep(philo->t_eat);
 	while (philo->amount_eat == -1 || philo->amount_eat > 0)
 	{
-		check_forks(philo, philo->l_fork, philo->r_fork);
+		check_forks(philo);
 		eating(philo);
 		if (philo->stop == true)
 			return ;
@@ -74,9 +74,9 @@ static bool	init_philo(t_philo *philo, t_table *table, int name)
 	philo->stop = false;
 	philo->t_last_meal = table->start;
 	philo->l_fork = &table->fork[name];
-	if ((unsigned int)philo->name == table->n_philo)
+	if ((unsigned int)philo->name == table->n_philo && table->n_philo != 1)
 		philo->r_fork = &table->fork[0];
-	else
+	else if (table->n_philo != 1)
 		philo->r_fork = &table->fork[name + 1];
 	if (pthread_mutex_init(&philo->body, NULL) != 0)
 		return (false);

@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:18:13 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/08 15:34:36 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:35:10 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,19 @@ void	create_fork(t_table *table)
 	}
 }
 
-void	check_forks(t_philo *philo, t_fork *left, t_fork *right)
+void	check_forks(t_philo *philo)
 {
-	if (philo->name % 2 == 1)
-		pthread_mutex_lock(&left->fork);
-	else
-		pthread_mutex_lock(&right->fork);
+	if (philo->name % 2 == 1 && philo->l_fork != NULL)
+		pthread_mutex_lock(&philo->l_fork->fork);
+	else if (philo->r_fork != NULL)
+		pthread_mutex_lock(&philo->r_fork->fork);
 	print_message("has taken a fork", philo, gettimeofday_ms());
-	if (philo->name % 2 == 1)
-		pthread_mutex_lock(&right->fork);
-	else
-		pthread_mutex_lock(&left->fork);
-	print_message("has taken a fork", philo, gettimeofday_ms());
+	if (philo->table->n_philo != 1)
+	{
+		if (philo->name % 2 == 1 && philo->r_fork != NULL)
+			pthread_mutex_lock(&philo->r_fork->fork);
+		else if (philo->l_fork != NULL)
+			pthread_mutex_lock(&philo->l_fork->fork);
+		print_message("has taken a fork", philo, gettimeofday_ms());
+	}
 }

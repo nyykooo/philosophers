@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 14:40:24 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/09 15:50:00 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	*mind_hub(void *philosopher);
 
 // FORKS/MUTEXES
 void	create_fork(t_table *table);
-void	check_forks(t_philo *philo, t_fork *left, t_fork *right);
+void	check_forks(t_philo *philo);
 
 // ACTIONS
 void	eating(t_philo *philo);
