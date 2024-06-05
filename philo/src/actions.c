@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:27:46 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 16:29:33 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/11 13:44:04 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	eating(t_philo *philo)
 	}
 	if (philo->name % 2 == 1)
 	{
-		if (philo->r_fork)
+		if (philo->r_fork != NULL)
 			pthread_mutex_unlock(&philo->r_fork->fork);
 		pthread_mutex_unlock(&philo->l_fork->fork);
 	}

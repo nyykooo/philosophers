@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 14:37:24 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/18 18:23:18 by ncampbel         ###   ########.fr       */
+/*   Created: 2024/04/26 15:07:27 by ncampbel          #+#    #+#             */
+/*   Updated: 2024/05/11 15:28:04 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-long	ft_atol(const char *nbr)
+unsigned long	gettimeofday_ms(void)
 {
-	long	res;
-	int		signal;
+	struct timeval	time;
 
-	res = 0;
-	signal = 1;
-	if (*nbr == 45)
-	{
-		signal *= (-1);
-		nbr++;
-	}
-	else if (*nbr == 43)
-		nbr++;
-	while (*nbr >= 48 && *nbr <= 57)
-		res = res * 10 + (*nbr++ - 48);
-	return (res * signal);
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec) * 1000 + (time.tv_usec) / 1000);
+}
+
+void	better_msleep(unsigned long delay_ms)
+{
+	unsigned long	deadline;
+
+	deadline = gettimeofday_ms() + delay_ms;
+	while (gettimeofday_ms() <= deadline)
+		usleep(500);
 }

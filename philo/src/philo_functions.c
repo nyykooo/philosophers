@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 16:40:21 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/11 13:45:34 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static bool	init_philo(t_philo *philo, t_table *table, int name)
 		philo->r_fork = &table->fork[0];
 	else if (table->n_philo != 1)
 		philo->r_fork = &table->fork[name + 1];
+	else
+		philo->r_fork = NULL;
 	if (pthread_mutex_init(&philo->body, NULL) != 0)
 		return (false);
 	if (pthread_create(&philo->mind, NULL, mind_hub, 

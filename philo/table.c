@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 16:41:12 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/11 14:11:34 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ static void	check_4deaths(t_table *table)
 static void	init_table(t_table *table, char **av)
 {
 	table->n_philo = ft_atoi(av[1]);
-	table->t_die = ft_atol(av[2]);
-	table->t_eat = ft_atol(av[3]);
-	table->t_sleep = ft_atoi(av[4]);
+	table->t_die = ft_atoul(av[2]);
+	table->t_eat = ft_atoul(av[3]);
+	table->t_sleep = ft_atoul(av[4]);
 	table->amount_eat = -1;
 	table->all_alive = true;
 	table->all_eaten = false;
 	table->start = gettimeofday_ms();
 	if (av[5])
-		table->amount_eat = ft_atol(av[5]);
+		table->amount_eat = ft_atoi(av[5]);
 	if (pthread_mutex_init(&table->may_we, NULL) != 0
 		|| pthread_mutex_init(&table->print_message, NULL) != 0)
 	{
@@ -80,12 +80,20 @@ static bool	parse_input(int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 		return (false);
-	if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0
-		|| ft_atoi(av[4]) < 0)
+	if (!is_number(av[1]) || !is_number(av[2]) || !is_number(av[3])
+		|| !is_number(av[4]))
+		return (false);
+	else if (ac == 6 && is_number(av[5]))
+		return (false);
+	if (ft_atoi(av[1]) <= 0 || ft_atoul(av[2]) <= 0 || ft_atoul(av[3]) <= 0
+		|| ft_atoul(av[4]) <= 0)
+		return (false);
+	else if (ft_atoul(av[2]) > LONG_MAX || ft_atoul(av[3]) > LONG_MAX
+		|| ft_atoul(av[4]) > LONG_MAX)
 		return (false);
 	else if (ac == 6 && (ft_atoi(av[5]) < 0 || ft_atoi(av[5]) == 0))
 		return (false);
-	if (ft_atol(av[1]) > 200)
+	if (ft_atoi(av[1]) > 200)
 		return (false);
 	return (true);
 }

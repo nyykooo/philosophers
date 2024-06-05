@@ -1,16 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 17:12:59 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/04/18 18:23:09 by ncampbel         ###   ########.fr       */
+/*   Created: 2024/05/11 12:18:43 by ncampbel          #+#    #+#             */
+/*   Updated: 2024/05/11 14:07:46 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+unsigned long	ft_atoul(const char *nbr)
+{
+	unsigned long	res;
+	int				signal;
+
+	res = 0;
+	signal = 1;
+	while (*nbr == 45 || *nbr == 43)
+	{
+		if (*nbr == 45)
+			signal *= (-1);
+		nbr++;
+	}
+	while (*nbr >= 48 && *nbr <= 57)
+		res = res * 10 + (*nbr++ - 48);
+	return (res * signal);
+}
 
 int	ft_atoi(const char *nptr)
 {
@@ -19,22 +37,33 @@ int	ft_atoi(const char *nptr)
 	int	res;
 
 	i = 0;
-	signal = 0;
+	signal = 1;
 	res = 0;
 	while (nptr[i] == 32 || (nptr[i] >= 9 && nptr[i] <= 13))
 		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
+	while (*nptr == 45 || *nptr == 43)
 	{
-		if (nptr[i] == '-')
-		{
-			signal++;
-		}
-		i++;
+		if (*nptr == 45)
+			signal *= (-1);
+		nptr++;
 	}
 	while ((int)nptr[i] >= 48 && (int)nptr[i] <= 57)
 		res = res * 10 + ((int)nptr[i++] - 48);
-	if (signal != 0)
-		return (-res);
-	else
-		return (res);
+	return (res * signal);
+}
+
+bool	is_number(char *number)
+{
+	int	i;
+
+	i = 0;
+	while (number[i] == '-' || number[i] == '+')
+		i++;
+	if (number[i] == '\0')
+		return (false);
+	while (number[i] >= '0' && number[i] <= '9')
+		i++;
+	if (number[i] == '\0')
+		return (true);
+	return (false);
 }

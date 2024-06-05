@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/09 15:50:00 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/05/11 15:24:39 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,30 +64,32 @@ typedef struct s_table
 }	t_table;
 
 // GENERAL
-int		ft_atoi(const char *nptr);
-int		ft_strlen(char *str);
-long	ft_atol(const char *nbr);
-void	ft_exit(t_table *table);
+unsigned long	ft_atoul(const char *nbr);
+int				ft_atoi(const char *nptr);
+int				ft_strlen(char *str);
+bool			is_number(char *number);
+void			ft_exit(t_table *table);
 
 // PRINTING
-void	print_message(char *message, t_philo *philo, unsigned long time);
-void	death_eaten(t_table *table, int name);
+void			print_message(char *message,
+					t_philo *philo, unsigned long time);
+void			death_eaten(t_table *table, int name);
 
 // PHILOS/THREADS
-void	create_philo(t_table *table);
-void	*mind_hub(void *philosopher);
+void			create_philo(t_table *table);
+void			*mind_hub(void *philosopher);
 
 // FORKS/MUTEXES
-void	create_fork(t_table *table);
-void	check_forks(t_philo *philo);
+void			create_fork(t_table *table);
+void			check_forks(t_philo *philo);
 
 // ACTIONS
-void	eating(t_philo *philo);
-void	sleeping(t_philo *philo);
-void	thinking(t_philo *philo);
+void			eating(t_philo *philo);
+void			sleeping(t_philo *philo);
+void			thinking(t_philo *philo);
 
 // TIME
-void	better_msleep(long delay_ms);
-long	gettimeofday_ms(void);
+void			better_msleep(unsigned long delay_ms);
+unsigned long	gettimeofday_ms(void);
 
 #endif
