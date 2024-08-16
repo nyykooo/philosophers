@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:42:08 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/11 14:11:34 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/08/11 19:11:34 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static bool	parse_input(int ac, char **av)
 	if (!is_number(av[1]) || !is_number(av[2]) || !is_number(av[3])
 		|| !is_number(av[4]))
 		return (false);
-	else if (ac == 6 && is_number(av[5]))
+	else if (ac == 6 && !is_number(av[5]))
 		return (false);
 	if (ft_atoi(av[1]) <= 0 || ft_atoul(av[2]) <= 0 || ft_atoul(av[3]) <= 0
 		|| ft_atoul(av[4]) <= 0)

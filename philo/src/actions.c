@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:27:46 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/11 13:44:04 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/08/11 19:03:07 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	eating(t_philo *philo)
 		if (philo->amount_eat == 0)
 			philo->stop = true;
 		pthread_mutex_unlock(&philo->body);
-		better_msleep(philo->t_eat);
+		better_msleep(philo->t_eat, philo);
 	}
 	if (philo->name % 2 == 1)
 	{
@@ -42,13 +42,13 @@ void	eating(t_philo *philo)
 void	sleeping(t_philo *philo)
 {
 	print_message("is sleeping", philo, gettimeofday_ms());
-	better_msleep(philo->t_sleep);
+	better_msleep(philo->t_sleep, philo);
 	philo->is_awake = false;
 }
 
 void	thinking(t_philo *philo)
 {
 	print_message("is thinking", philo, gettimeofday_ms());
-	better_msleep(philo->t_think);
+	better_msleep(philo->t_think, philo);
 	philo->is_awake = true;
 }

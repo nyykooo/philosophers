@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:43:00 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/11 15:24:39 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/08/11 19:03:44 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void			sleeping(t_philo *philo);
 void			thinking(t_philo *philo);
 
 // TIME
-void			better_msleep(unsigned long delay_ms);
+void			better_msleep(unsigned long delay_ms, t_philo *philo);
 unsigned long	gettimeofday_ms(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ncampbel <ncampbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:15:28 by ncampbel          #+#    #+#             */
-/*   Updated: 2024/05/11 13:45:34 by ncampbel         ###   ########.fr       */
+/*   Updated: 2024/08/11 19:10:22 by ncampbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ static unsigned long	get_t_think(t_table *table)
 
 	if (table->n_philo % 2 == 1)
 		t_think = table->t_eat * 2 - table->t_sleep;
-	else
+	else if (table->t_eat > table->t_sleep)
 		t_think = table->t_eat - table->t_sleep;
+	else
+		t_think = 0;
 	return (t_think);
 }
 
@@ -28,12 +30,12 @@ static void	habits(t_philo *philo)
 	if (philo->table->n_philo % 2 == 1)
 	{
 		if ((unsigned int)philo->name == philo->table->n_philo)
-			better_msleep(philo->t_eat * 2);
+			better_msleep(philo->t_eat * 2, philo);
 		else if (philo->name % 2 == 1)
-			better_msleep(philo->t_eat);
+			better_msleep(philo->t_eat, philo);
 	}
 	else if (philo->name % 2 == 0)
-		better_msleep(philo->t_eat);
+		better_msleep(philo->t_eat, philo);
 	while (philo->amount_eat == -1 || philo->amount_eat > 0)
 	{
 		check_forks(philo);
@@ -82,7 +84,7 @@ static bool	init_philo(t_philo *philo, t_table *table, int name)
 		philo->r_fork = NULL;
 	if (pthread_mutex_init(&philo->body, NULL) != 0)
 		return (false);
-	if (pthread_create(&philo->mind, NULL, mind_hub, 
+	if (pthread_create(&philo->mind, NULL, mind_hub,
 			philo) != 0)
 		return (false);
 	return (true);
